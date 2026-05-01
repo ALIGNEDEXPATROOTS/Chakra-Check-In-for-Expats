@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chakra Check-In • Aligned Expat Roots</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #1a1a1a;
+  --bg2:       #2b2b2b;
+  --card:      rgba(35,35,35,0.92);
+  --card2:     rgba(43,43,43,0.9);
+  --matcha:    #bfe07a;
+  --coral:     #f4a39a;
+  --teal:      #7dcfc4;
+  --wm:        #ff6b6e;
+  --sky:       #92bcd6;
+  --drift:     #a89a85;
+  --soft:      #faf3ec;
+  --muted:     rgba(250,243,236,0.65);
+  --dim:       rgba(250,243,236,0.45);
+  --border:    rgba(191,224,122,0.15);
+  --borderhov: rgba(191,224,122,0.35);
+  --font-d:    'Fraunces', serif;
+  --font-b:    'Space Grotesk', sans-serif;
+  --font-m:    'JetBrains Mono', monospace;
+}
+
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: var(--font-b);
+  background: var(--bg);
+  color: var(--soft);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Sparkle ── */
+@keyframes sparkleAnim {
+  0%   { opacity:1; transform:translate(-50%,-50%) scale(1) rotate(0deg); }
+  100% { opacity:0; transform:translate(-50%,-50%) scale(0.2) rotate(180deg) translateY(-20px); }
+}
+.sparkle {
+  position:fixed; pointer-events:none; z-index:9999;
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  animation:sparkleAnim 0.7s ease-out forwards;
+}
+
+/* ── Animations ── */
+@keyframes btnGlow {
+  0%   { box-shadow:0 0 18px 4px rgba(191,224,122,0.6); }
+  33%  { box-shadow:0 0 18px 4px rgba(244,163,154,0.6); }
+  66%  { box-shadow:0 0 18px 4px rgba(125,207,196,0.6); }
+  100% { box-shadow:0 0 18px 4px rgba(191,224,122,0.6); }
+}
+@keyframes orbPulse {
+  0%,100% { transform:scale(1); opacity:0.6; }
+  50%     { transform:scale(1.3); opacity:1; }
+}
+@keyframes fadeSlide {
+  from { opacity:0; transform:translateY(14px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes expandDown {
+  from { opacity:0; max-height:0; overflow:hidden; }
+  to   { opacity:1; max-height:800px; overflow:hidden; }
+}
+@keyframes barGrow {
+  from { width:0; }
+}
+
+/* ── Screen transitions ── */
+.screen { display:none; animation:fadeSlide 0.35s ease; }
+.screen.active { display:flex; flex-direction:column; min-height:100vh; }
+
+/* ── Header ── */
+.aer-header {
+  position:relative;
+  background:linear-gradient(160deg,#1f1f1f 0%,#242420 50%,#1a1f1a 100%);
+  padding:40px 28px 52px;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  overflow:hidden;
+}
+.aer-header::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse at 20% 50%,rgba(191,224,122,0.07) 0%,transparent 55%),
+    radial-gradient(ellipse at 80% 20%,rgba(125,207,196,0.07) 0%,transparent 55%);
+}
+.aer-header::after {
+  content:'✦  ◦  ✦  ◦  ✦';
+  position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+  font-size:10px; color:rgba(191,224,122,0.3); letter-spacing:8px; white-space:nowrap;
+}
+.aer-header-inner { position:relative; z-index:2; }
+.logo-row { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:20px; }
+.logo-mark { font-size:13px; color:var(--matcha); }
+.logo-text { font-family:var(--font-m); font-size:10px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
+.eyebrow { font-family:var(--font-m); font-size:10px; font-weight:500; letter-spacing:0.15em; text-transform:uppercase; color:var(--matcha); margin-bottom:14px; }
+.h-title { font-family:var(--font-d); font-size:clamp(26px,6vw,46px); font-weight:700; font-style:italic; color:var(--soft); line-height:1.12; margin-bottom:14px; }
+.h-sub { font-family:var(--font-b); font-size:14px; line-height:1.7; color:var(--muted); max-width:480px; margin:0 auto; }
+
+/* ── Content block ── */
+.content {
+  display:flex; flex-direction:column; align-items:center;
+  padding:40px 24px 64px; text-align:center; flex:1;
+}
+
+/* ── Orb ── */
+.orb {
+  width:120px; height:120px; border-radius:50%;
+  background:radial-gradient(circle at 38% 36%,rgba(191,224,122,0.5) 0%,rgba(125,207,196,0.35) 40%,rgba(146,188,214,0.15) 70%,transparent 100%);
+  filter:blur(20px); margin-bottom:24px;
+  animation:orbPulse 4s ease-in-out infinite;
+}
+
+/* ── Breathe orb ── */
+.breathe-wrap { position:relative; width:160px; height:160px; margin:12px 0 20px; display:flex; align-items:center; justify-content:center; }
+.breathe-orb {
+  width:120px; height:120px; border-radius:50%;
+  background:radial-gradient(circle at 38% 35%,rgba(191,224,122,0.85) 0%,rgba(125,207,196,0.55) 40%,rgba(146,188,214,0.2) 70%,transparent 100%);
+  box-shadow:0 0 60px rgba(191,224,122,0.25),0 0 120px rgba(125,207,196,0.12);
+  transition:transform 0.5s ease;
+}
+.breathe-count { position:absolute; bottom:-4px; font-family:var(--font-m); font-size:11px; font-weight:500; letter-spacing:0.1em; color:var(--matcha); }
+.breath-label { font-family:var(--font-d); font-size:20px; font-style:italic; color:var(--teal); margin-bottom:24px; min-height:28px; }
+
+/* ── Buttons ── */
+.btn {
+  font-family:var(--font-b); font-size:14px; font-weight:600;
+  padding:14px 40px; border:none; border-radius:12px;
+  background:linear-gradient(135deg,var(--matcha) 0%,var(--teal) 100%);
+  color:#1a1a1a; cursor:pointer; letter-spacing:0.02em;
+  animation:btnGlow 3s ease-in-out infinite;
+  transition:transform 0.2s ease, filter 0.2s ease;
+}
+.btn:hover { transform:scale(1.03); filter:brightness(1.08); }
+.btn:disabled { opacity:0.35; pointer-events:none; animation:none; box-shadow:none; }
+.btn-ghost {
+  font-family:var(--font-b); font-size:13px; font-weight:500;
+  padding:13px 28px; border:1.5px solid var(--borderhov); border-radius:12px;
+  background:transparent; color:var(--matcha); cursor:pointer; transition:all 0.2s ease;
+}
+.btn-ghost:hover { background:rgba(191,224,122,0.08); border-color:rgba(191,224,122,0.6); }
+.btn-row { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+
+/* ── Progress ── */
+.progress-row { display:flex; gap:8px; margin-bottom:32px; }
+.progress-dot { width:44px; height:4px; border-radius:100px; background:rgba(191,224,122,0.12); transition:background 0.3s ease; }
+.progress-dot.done { background:linear-gradient(90deg,var(--matcha),var(--teal)); }
+
+/* ── Chips ── */
+.chip-grid { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; max-width:560px; margin-bottom:36px; }
+.chip {
+  font-family:var(--font-b); font-size:13px; font-weight:400;
+  padding:10px 20px; border-radius:10px;
+  border:1.5px solid rgba(191,224,122,0.15);
+  background:var(--card2); color:var(--muted);
+  cursor:pointer; transition:all 0.2s ease;
+}
+.chip:hover { border-color:rgba(191,224,122,0.38); color:var(--soft); background:rgba(55,55,55,0.9); }
+.chip.on {
+  background:rgba(191,224,122,0.1); border-color:var(--matcha);
+  color:var(--matcha); font-weight:600;
+  box-shadow:0 0 0 2px rgba(191,224,122,0.1);
+}
+
+/* ── Labels ── */
+.label { font-family:var(--font-m); font-size:10px; font-weight:500; letter-spacing:0.15em; color:var(--matcha); text-transform:uppercase; margin-bottom:8px; }
+.body-lg { font-size:16px; line-height:1.75; color:var(--soft); max-width:480px; margin-bottom:36px; }
+.body-sm { font-size:14px; line-height:1.7; color:var(--muted); }
+.card-body { font-size:13.5px; line-height:1.7; color:rgba(250,243,236,0.7); }
+.disclaimer { font-size:11px; color:var(--drift); margin-top:24px; max-width:360px; line-height:1.5; }
+
+/* ── Hero card ── */
+.hero-card {
+  background:var(--card); border:1px solid rgba(191,224,122,0.2);
+  border-radius:18px; padding:32px 28px;
+  margin:28px 0 24px; max-width:560px; width:100%; text-align:center;
+  box-shadow:0 8px 40px rgba(0,0,0,0.3);
+}
+.hero-card .card-title { font-family:var(--font-d); font-size:20px; font-weight:700; font-style:italic; color:var(--soft); margin-bottom:10px; line-height:1.3; }
+.action-box {
+  margin-top:20px; padding:16px 20px;
+  background:rgba(191,224,122,0.07); border:1px solid rgba(191,224,122,0.15);
+  border-radius:12px; text-align:left;
+}
+
+/* ── Result cards ── */
+.result-list { width:100%; max-width:560px; margin:0 auto; }
+.result-card {
+  background:var(--card); border:1px solid rgba(191,224,122,0.1);
+  border-radius:14px; padding:18px 20px; margin-bottom:10px;
+  cursor:pointer; transition:all 0.2s ease;
+}
+.result-card:hover { background:var(--card2); border-color:rgba(191,224,122,0.22); box-shadow:0 4px 20px rgba(191,224,122,0.07); }
+.result-header { display:flex; align-items:center; justify-content:space-between; }
+.result-left { display:flex; align-items:center; gap:12px; flex:1; }
+.chakra-icon { font-size:22px; }
+.chakra-meta { flex:1; }
+.chakra-name-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px; }
+.chakra-name { font-family:var(--font-d); font-weight:700; font-size:16px; color:var(--soft); }
+.status-badge { font-family:var(--font-m); font-size:9px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; padding:3px 10px; border-radius:8px; }
+.bar-track { height:4px; background:rgba(191,224,122,0.1); border-radius:100px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:100px; animation:barGrow 0.8s cubic-bezier(.34,1.56,.64,1); }
+.chevron { font-size:18px; color:var(--matcha); transition:transform 0.3s ease; margin-left:8px; flex-shrink:0; }
+.chevron.open { transform:rotate(180deg); }
+
+/* ── Expanded detail ── */
+.expand-body { border-top:1px solid rgba(191,224,122,0.1); padding-top:16px; margin-top:12px; animation:expandDown 0.3s ease; }
+.detail-section { margin-bottom:16px; }
+.affirmation {
+  font-family:var(--font-d); font-size:15px; font-style:italic; color:var(--matcha);
+  padding:14px 18px; background:rgba(191,224,122,0.07);
+  border-left:3px solid rgba(191,224,122,0.4); border-radius:0 10px 10px 0;
+  text-align:left; margin-top:6px;
+}
+
+/* ── CTA ── */
+.cta-box {
+  text-align:center; margin-top:40px; padding:32px 24px;
+  background:var(--card); border-radius:18px; border:1px solid rgba(191,224,122,0.14);
+  max-width:560px; width:100%;
+}
+
+/* ── Mobile ── */
+@media(max-width:480px){
+  .hero-card { padding:22px 16px; }
+  .result-card { padding:14px; }
+  .aer-header { padding:32px 20px 44px; }
+  .btn { padding:13px 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SCREEN: WELCOME ══ -->
+<div class="screen active" id="s-welcome">
+  <div class="aer-header">
+    <div class="aer-header-inner">
+      <div class="logo-row"><span class="logo-mark">✦</span><span class="logo-text">Aligned Expat Roots</span></div>
+      <p class="eyebrow">Energetic Clarity for Expats & Nomads</p>
+      <h1 class="h-title">Chakra Check-In</h1>
+      <p class="h-sub">A short guided check-in to uncover what's most activated or blocked — and your clearest next move.</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="orb"></div>
+    <p class="body-lg">Built for travellers, expats, and digital nomads navigating the real emotional terrain of a location-free life. Whether you're homesick, burned out on freedom, or just feeling off — this check-in helps you figure out why.</p>
+    <button class="btn" onclick="goTo('s-breathe')">Begin Check-In</button>
+    <p class="disclaimer">This is a reflective self-awareness tool — not a medical or diagnostic assessment.</p>
+  </div>
+</div>
+
+<!-- ══ SCREEN: BREATHE ══ -->
+<div class="screen" id="s-breathe">
+  <div class="aer-header">
+    <div class="aer-header-inner">
+      <div class="logo-row"><span class="logo-mark">✦</span><span class="logo-text">Aligned Expat Roots</span></div>
+      <p class="eyebrow">Grounding Moment</p>
+      <h1 class="h-title">Let's settle in</h1>
+    </div>
+  </div>
+  <div class="content">
+    <p class="body-sm" id="breathe-intro" style="margin-bottom:32px;max-width:400px;">Wherever you are in the world right now — take a moment to arrive. Three gentle breaths to ground your energy.</p>
+    <div class="breathe-wrap">
+      <div class="breathe-orb" id="breathe-orb"></div>
+      <div class="breathe-count" id="breathe-count" style="display:none;"></div>
+    </div>
+    <p class="breath-label" id="breath-label"></p>
+    <div class="btn-row" id="breathe-btns">
+      <button class="btn" onclick="startBreath()">Start Breathing</button>
+      <button class="btn-ghost" onclick="goTo('s-emotions')">Skip to Check-In</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: EMOTIONS ══ -->
+<div class="screen" id="s-emotions">
+  <div class="aer-header">
+    <div class="aer-header-inner">
+      <div class="logo-row"><span class="logo-mark">✦</span><span class="logo-text">Aligned Expat Roots</span></div>
+      <p class="eyebrow">Step 1 of 3</p>
+      <h1 class="h-title">How are you feeling right now?</h1>
+      <p class="h-sub">Select up to 4 that resonate most</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="progress-row">
+      <div class="progress-dot done"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+    </div>
+    <div class="chip-grid" id="chips-emotions"></div>
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="goTo('s-breathe')">← Back</button>
+      <button class="btn" id="btn-emotions" onclick="goTo('s-body')" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: BODY ══ -->
+<div class="screen" id="s-body">
+  <div class="aer-header">
+    <div class="aer-header-inner">
+      <div class="logo-row"><span class="logo-mark">✦</span><span class="logo-text">Aligned Expat Roots</span></div>
+      <p class="eyebrow">Step 2 of 3</p>
+      <h1 class="h-title">Where do you feel it in your body?</h1>
+      <p class="h-sub">Select any that feel true today</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="progress-row">
+      <div class="progress-dot done"></div>
+      <div class="progress-dot done"></div>
+      <div class="progress-dot"></div>
+    </div>
+    <div class="chip-grid" id="chips-body"></div>
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="goTo('s-emotions')">← Back</button>
+      <button class="btn" id="btn-body" onclick="goTo('s-patterns')" disabled>Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: PATTERNS ══ -->
+<div class="screen" id="s-patterns">
+  <div class="aer-header">
+    <div class="aer-header-inner">
+      <div class="logo-row"><span class="logo-mark">✦</span><span class="logo-text">Aligned Expat Roots</span></div>
+      <p class="eyebrow">Step 3 of 3</p>
+      <h1 class="h-title">What's showing up in your life right now?</h1>
+      <p class="h-sub">Select the patterns you recognise</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="progress-row">
+      <div class="progress-dot done"></div>
+      <div class="progress-dot done"></div>
+      <div class="progress-dot done"></div>
+    </div>
+    <div class="chip-grid" id="chips-patterns"></div>
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="goTo('s-body')">← Back</button>
+      <button class="btn" id="btn-patterns" onclick="showResults()" disabled>See My Results</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: RESULTS ══ -->
+<div class="screen" id="s-results">
+  <div class="aer-header">
+    <div class="aer-header-inner">
+      <div class="logo-row"><span class="logo-mark">✦</span><span class="logo-text">Aligned Expat Roots</span></div>
+      <p class="eyebrow">Your Energetic Reading</p>
+      <h1 class="h-title">Here's What Came Through</h1>
+    </div>
+  </div>
+  <div class="content">
+    <div id="results-hero"></div>
+    <div class="result-list" id="results-list"></div>
+    <div class="cta-box">
+      <p class="label">Want Deeper Guidance?</p>
+      <p class="body-sm" style="margin-bottom:20px;max-width:420px;">This check-in is your starting point. For deeper support, community, and tools built specifically for expats and nomads — join us inside Aligned Expat Roots on Skool.</p>
+      <div class="btn-row">
+        <button class="btn" id="btn-save" onclick="saveResults()">Save My Results</button>
+        <button class="btn-ghost" onclick="restart()">Start Fresh</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ DATA ══
+const CHAKRAS = [
+  { id:"root", name:"Root", sanskrit:"Muladhara", color:"#ff6b6e", icon:"🔴", theme:"Safety, grounding, stability",
+    bizMeaning:"Constant movement can make it hard to feel safe. You may be struggling with financial inconsistency, lack of routine, or a deep sense of not belonging anywhere — not quite home, not quite away.",
+    prompt:"What would 'enough stability' actually look like for you right now — not forever, just for this season?",
+    action:"Create one small anchor ritual for wherever you are: a morning walk, a favourite coffee order, a consistent work start time.",
+    practice:"5 deep belly breaths with feet flat on the floor. On each exhale, silently say: I belong here. I am safe right now.",
+    affirmation:"Home is something I carry within me. I am grounded wherever I go.", mantra:"LAM" },
+  { id:"sacral", name:"Sacral", sanskrit:"Svadhisthana", color:"#f4a39a", icon:"🟠", theme:"Creativity, emotion, pleasure, flow",
+    bizMeaning:"The novelty of new places can mask emotional emptiness. You may be numbing loneliness with constant movement, struggling to create, or feeling like you've lost the joy that made you leave in the first place.",
+    prompt:"When did you last do something just because it felt good — not for content, not for productivity?",
+    action:"Do one thing today purely for pleasure: a local market, a sunset, a meal with zero phone.",
+    practice:"Free-write for 3 minutes about what you actually feel right now. Not what looks good. What's true.",
+    affirmation:"I am allowed to slow down and enjoy this life I built.", mantra:"VAM" },
+  { id:"solar", name:"Solar Plexus", sanskrit:"Manipura", color:"#bfe07a", icon:"🟡", theme:"Confidence, willpower, personal power",
+    bizMeaning:"Making every single decision alone — where to stay, what to charge, how to show up — is exhausting. You may be second-guessing yourself, feeling unclear about who you are outside your home culture, or burning out on freedom.",
+    prompt:"What decision have you been outsourcing to 'what other nomads do' instead of trusting your own gut?",
+    action:"Make one decision today without asking for opinions. Trust it. Done.",
+    practice:"Stand tall, hands on your belly. Breathe in: I know myself. Breathe out: I trust my choices.",
+    affirmation:"I don't need a fixed address to have a strong identity.", mantra:"RAM" },
+  { id:"heart", name:"Heart", sanskrit:"Anahata", color:"#7dcfc4", icon:"💚", theme:"Love, compassion, connection",
+    bizMeaning:"It's hard to build deep relationships when you're always leaving. You may be grieving people back home, cycling through transient friendships, or feeling lonely in a way you can't quite explain to people who didn't choose this life.",
+    prompt:"Who have you been meaning to reach out to but haven't? What's stopping you?",
+    action:"Send a voice note today to someone who actually knows you. Not a text. A voice.",
+    practice:"Place both hands on your heart. Breathe in love. Breathe out the weight of missing people.",
+    affirmation:"Real connection isn't about proximity. My people find me wherever I am.", mantra:"YAM" },
+  { id:"throat", name:"Throat", sanskrit:"Vishuddha", color:"#92bcd6", icon:"🔵", theme:"Communication, truth, self-expression",
+    bizMeaning:"Navigating different languages, cultures, and time zones takes real energy. You may be dimming yourself to fit in, avoiding showing the full picture of your life, or struggling to explain what you actually do to people who don't get it.",
+    prompt:"What part of your expat or nomad life are you not talking about — and why not?",
+    action:"Share one honest, unpolished truth about your life today. Online or in a real conversation.",
+    practice:"Hum gently for 1 minute with eyes closed. Feel the vibration in your chest and throat. Let your voice take up space.",
+    affirmation:"My story is worth telling. I don't need to shrink to be accepted.", mantra:"HAM" },
+  { id:"thirdeye", name:"Third Eye", sanskrit:"Ajna", color:"#a89a85", icon:"🟣", theme:"Intuition, insight, inner vision",
+    bizMeaning:"When everywhere is an option, it's easy to lose clarity. You may be using travel as a way to avoid sitting still long enough to hear yourself think, or feeling paralysed by having too many directions you could go.",
+    prompt:"If you stopped moving for 30 days, what would you finally have to face?",
+    action:"Write down the one next move — location, business, life — your gut has been whispering. Commit to it for 2 weeks.",
+    practice:"Close your eyes. Ask: what does my life actually need from me right now? Sit in the quiet. Write the first thing that comes.",
+    affirmation:"Stillness is not stagnation. My clearest answers come when I pause.", mantra:"OM" },
+  { id:"crown", name:"Crown", sanskrit:"Sahasrara", color:"#faf3ec", icon:"⚪", theme:"Spiritual connection, meaning, purpose",
+    bizMeaning:"You chose this life for a reason. But sometimes the freedom feels hollow, the Instagram version of it feels fake, and you've forgotten what the point actually was. You may be craving meaning more than the next destination.",
+    prompt:"Why did you really leave? And is that reason still alive in how you're living now?",
+    action:"Write your original why in one sentence. Put it somewhere you'll see it every day.",
+    practice:"Sit in stillness for 2 minutes. No phone, no planning. Just breathe and reconnect to the version of you who made the leap.",
+    affirmation:"I didn't just leave — I chose something. And that something still matters.", mantra:"AUM" }
+];
+
+const EMOTIONS = [
+  { label:"Homesick", chakras:["root","heart"] },
+  { label:"Overwhelmed", chakras:["root","solar"] },
+  { label:"Lonely", chakras:["heart","sacral"] },
+  { label:"Scattered", chakras:["thirdeye","root"] },
+  { label:"Restless", chakras:["sacral","root"] },
+  { label:"Inspired", chakras:["crown","sacral"] },
+  { label:"Invisible / unseen", chakras:["throat","heart"] },
+  { label:"Self-Doubting", chakras:["solar","thirdeye"] },
+  { label:"Disconnected from purpose", chakras:["crown","heart"] },
+  { label:"Afraid of the future", chakras:["root","thirdeye"] }
+];
+const BODY_CUES = [
+  { label:"Tight chest", chakras:["heart","throat"] },
+  { label:"Knot in stomach", chakras:["solar","sacral"] },
+  { label:"Throat tension", chakras:["throat"] },
+  { label:"Heavy limbs / exhaustion", chakras:["root","sacral"] },
+  { label:"Racing mind", chakras:["thirdeye","crown"] },
+  { label:"Low energy / travel fatigue", chakras:["root","sacral"] },
+  { label:"Jaw clenching / tension", chakras:["throat","solar"] },
+  { label:"Restless, can't settle", chakras:["sacral","root"] }
+];
+const PATTERNS = [
+  { label:"No routine, always reactive", chakras:["root","solar"] },
+  { label:"Avoiding visibility online", chakras:["throat","heart"] },
+  { label:"Can't explain what I do simply", chakras:["throat","thirdeye"] },
+  { label:"Comparing my life to other nomads", chakras:["solar","thirdeye"] },
+  { label:"Burning out on freedom", chakras:["root","crown"] },
+  { label:"Scared to go back, scared to stay", chakras:["root","solar"] },
+  { label:"Feeling behind people back home", chakras:["solar","heart"] },
+  { label:"Lost my original 'why'", chakras:["crown","sacral"] },
+  { label:"Struggling with inconsistent income", chakras:["root","throat"] },
+  { label:"Jumping to the next place to avoid stillness", chakras:["thirdeye","sacral"] }
+];
+
+// ══ STATE ══
+const state = { emotions:new Set(), body:new Set(), patterns:new Set(), expanded:null };
+
+// ══ NAVIGATION ══
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ══ CHIP BUILDER ══
+function buildChips(items, stateSet, containerId, btnId, max=4) {
+  const wrap = document.getElementById(containerId);
+  wrap.innerHTML = '';
+  items.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'chip' + (stateSet.has(item.label) ? ' on' : '');
+    btn.textContent = item.label;
+    btn.onclick = () => {
+      if (stateSet.has(item.label)) {
+        stateSet.delete(item.label);
+        btn.classList.remove('on');
+      } else if (stateSet.size < max) {
+        stateSet.add(item.label);
+        btn.classList.add('on');
+      }
+      document.getElementById(btnId).disabled = stateSet.size === 0;
+    };
+    wrap.appendChild(btn);
+  });
+  document.getElementById(btnId).disabled = stateSet.size === 0;
+}
+
+// ══ BREATHE ══
+let breathTimer = null, breathIdx = 0, breathRound = 0;
+const breathPhases = [
+  { label:"Breathe in…", dur:4000, scale:1.4, trans:"transform 4s ease-in-out" },
+  { label:"Hold gently…", dur:4000, scale:1.4, trans:"transform 0.5s ease" },
+  { label:"Slowly release…", dur:6000, scale:1, trans:"transform 6s ease-in-out" }
+];
+
+function startBreath() {
+  document.getElementById('breathe-btns').style.display = 'none';
+  document.getElementById('breathe-intro').textContent = 'Follow the light. Let each breath bring you closer to clarity.';
+  breathRound = 0; breathIdx = 0;
+  runBreath();
+}
+
+function runBreath() {
+  if (breathRound >= 3) {
+    document.getElementById('breath-label').textContent = 'Beautiful.';
+    document.getElementById('breathe-intro').textContent = "You're grounded. Let's check in with your energy.";
+    document.getElementById('breathe-orb').style.cssText = 'transform:scale(1.15);transition:transform 0.5s ease;';
+    document.getElementById('breathe-count').style.display = 'none';
+    const doneBtn = document.createElement('button');
+    doneBtn.className = 'btn';
+    doneBtn.textContent = 'Continue to Check-In';
+    doneBtn.onclick = () => goTo('s-emotions');
+    document.getElementById('breathe-btns').innerHTML = '';
+    document.getElementById('breathe-btns').appendChild(doneBtn);
+    document.getElementById('breathe-btns').style.display = 'flex';
+    return;
+  }
+  const phase = breathPhases[breathIdx];
+  document.getElementById('breath-label').textContent = phase.label;
+  const orb = document.getElementById('breathe-orb');
+  orb.style.transition = phase.trans;
+  orb.style.transform = `scale(${phase.scale})`;
+  const cnt = document.getElementById('breathe-count');
+  cnt.style.display = 'block';
+  cnt.textContent = `${breathRound + 1} / 3`;
+  clearTimeout(breathTimer);
+  breathTimer = setTimeout(() => {
+    breathIdx++;
+    if (breathIdx >= breathPhases.length) { breathIdx = 0; breathRound++; }
+    runBreath();
+  }, phase.dur);
+}
+
+// ══ SCORING ══
+function getScores() {
+  const scores = {};
+  CHAKRAS.forEach(c => scores[c.id] = 0);
+  const tally = (items, selected, weight) =>
+    items.filter(i => selected.has(i.label)).forEach(i =>
+      i.chakras.forEach(cid => { scores[cid] = (scores[cid]||0) + weight; })
+    );
+  tally(EMOTIONS, state.emotions, 2);
+  tally(BODY_CUES, state.body, 1.5);
+  tally(PATTERNS, state.patterns, 2.5);
+  return scores;
+}
+
+function getStatus(score, max) {
+  if (max === 0) return { label:"Balanced", color:"#7dcfc4" };
+  const p = score/max;
+  if (p > 0.6) return { label:"Calling for Attention", color:"#ff6b6e" };
+  if (p > 0.3) return { label:"Slightly Strained", color:"#bfe07a" };
+  return { label:"Supported", color:"#7dcfc4" };
+}
+
+// ══ RESULTS ══
+function showResults() {
+  const scores = getScores();
+  const ranked = [...CHAKRAS].sort((a,b) => scores[b.id]-scores[a.id]).map(c => ({...c, score:scores[c.id]}));
+  const max = ranked[0].score || 1;
+  const top = ranked[0];
+
+  // Hero card
+  document.getElementById('results-hero').innerHTML = `
+    <div class="hero-card">
+      <div style="font-size:36px;margin-bottom:8px;">${top.icon}</div>
+      <p class="label">Most Calling for Attention Right Now</p>
+      <h3 class="card-title">${top.name} Chakra — ${top.theme}</h3>
+      <p class="card-body" style="margin-top:8px;">${top.bizMeaning}</p>
+      <div class="action-box">
+        <p class="label">Your Best Move Today</p>
+        <p class="card-body" style="font-weight:600;color:#faf3ec;">${top.action}</p>
+      </div>
+    </div>`;
+
+  // All 7
+  const list = document.getElementById('results-list');
+  list.innerHTML = '';
+  ranked.forEach(chakra => {
+    const status = getStatus(chakra.score, max);
+    const barW = max > 0 ? Math.max(8, (chakra.score/max)*100) : 8;
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = `
+      <div class="result-header">
+        <div class="result-left">
+          <span class="chakra-icon">${chakra.icon}</span>
+          <div class="chakra-meta">
+            <div class="chakra-name-row">
+              <span class="chakra-name">${chakra.name}</span>
+              <span class="status-badge" style="background:${status.color}22;color:${status.color};">${status.label}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:${barW}%;background:linear-gradient(90deg,${chakra.color}66,${chakra.color});"></div>
+            </div>
+          </div>
+        </div>
+        <span class="chevron" id="chev-${chakra.id}">▾</span>
+      </div>
+      <div class="expand-body" id="expand-${chakra.id}" style="display:none;">
+        <div class="detail-section"><p class="label">In Your Life Right Now</p><p class="card-body">${chakra.bizMeaning}</p></div>
+        <div class="detail-section"><p class="label">Reflection</p><p class="card-body" style="font-style:italic;">"${chakra.prompt}"</p></div>
+        <div class="detail-section"><p class="label">Today's Action</p><p class="card-body" style="font-weight:600;color:#bfe07a;">${chakra.action}</p></div>
+        <div class="detail-section"><p class="label">Grounding Practice</p><p class="card-body">${chakra.practice}</p></div>
+        <div class="affirmation">✦ ${chakra.affirmation}</div>
+      </div>`;
+    card.querySelector('.result-header').onclick = () => {
+      const body = document.getElementById(`expand-${chakra.id}`);
+      const chev = document.getElementById(`chev-${chakra.id}`);
+      const open = body.style.display === 'block';
+      body.style.display = open ? 'none' : 'block';
+      chev.classList.toggle('open', !open);
+    };
+    list.appendChild(card);
+  });
+
+  goTo('s-results');
+}
+
+function saveResults() {
+  const d = new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+  document.getElementById('btn-save').textContent = `✓ Saved ${d}`;
+}
+
+function restart() {
+  state.emotions.clear(); state.body.clear(); state.patterns.clear();
+  clearTimeout(breathTimer);
+  breathIdx = 0; breathRound = 0;
+  document.getElementById('breathe-btns').style.display = 'flex';
+  document.getElementById('breathe-btns').innerHTML = `
+    <button class="btn" onclick="startBreath()">Start Breathing</button>
+    <button class="btn-ghost" onclick="goTo('s-emotions')">Skip to Check-In</button>`;
+  document.getElementById('breathe-intro').textContent = 'Wherever you are in the world right now — take a moment to arrive. Three gentle breaths to ground your energy.';
+  document.getElementById('breath-label').textContent = '';
+  document.getElementById('breathe-count').style.display = 'none';
+  document.getElementById('breathe-orb').style = '';
+  document.getElementById('btn-save').textContent = 'Save My Results';
+  buildChips(EMOTIONS, state.emotions, 'chips-emotions', 'btn-emotions');
+  buildChips(BODY_CUES, state.body, 'chips-body', 'btn-body');
+  buildChips(PATTERNS, state.patterns, 'chips-patterns', 'btn-patterns');
+  goTo('s-welcome');
+}
+
+// ══ INIT ══
+buildChips(EMOTIONS, state.emotions, 'chips-emotions', 'btn-emotions');
+buildChips(BODY_CUES, state.body, 'chips-body', 'btn-body');
+buildChips(PATTERNS, state.patterns, 'chips-patterns', 'btn-patterns');
+
+// ══ SPARKLE TRAIL ══
+(function(){
+  const colors = ['#bfe07a','#f4a39a','#7dcfc4','#ffffff'];
+  let last = 0;
+  document.addEventListener('mousemove', e => {
+    const now = Date.now();
+    if (now - last < 40) return;
+    last = now;
+    const el = document.createElement('div');
+    el.className = 'sparkle';
+    const size = Math.random() * 8 + 4;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    el.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:${size}px;height:${size}px;background:${color};`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 700);
+  });
+})();
+</script>
+</body>
+</html>
